@@ -5,7 +5,7 @@ function checkRole(requiredRole) {
         const token = req.header('Authorization')?.split(' ')[1];
 
         if (!token) {
-            return res.status(401).json({ message: 'Access denied, no token provided' });
+            return res.status(401).json({ message: 'no token provided' });
         }
 
         try {
@@ -15,7 +15,6 @@ function checkRole(requiredRole) {
             if (req.user.role !== requiredRole) {
                 return res.status(403).json({ message: `Access denied, you need to be an ${requiredRole}` });
             }
-
             next();
         } catch (error) {
             res.status(400).json({ message: 'Invalid token' });
