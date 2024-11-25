@@ -1,4 +1,3 @@
-const EventModel = require("../models/EventModel");
 const minio = require('../minio');
 const EventDao = require("../Dao/EventDao");
 
