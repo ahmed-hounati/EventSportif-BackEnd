@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const UserDao = require('../Dao/UserDao');
 const UserModel = require('../models/UserModel');
+const { uploadMoviePoster } = require('./Event.controller');
 
 
 
@@ -12,6 +13,11 @@ class OrganizerController {
         if (!token) {
             return res.status(401).json({ message: 'No token provided' });
         }
+        if (!req.files || !req.files.poster) {
+            return res.status(400).json({ message: "image files are required" });
+        }
+        const poster = req.files.poster[0]
+        const posterUrl = await uploadMoviePoster(poster, 'posters');
         try {
             const User = await UserDao.findByEmail(email);
             if (User) {
@@ -22,7 +28,8 @@ class OrganizerController {
                 name: name,
                 email: email,
                 password: hashedPassword,
-                role: 'Participant'
+                role: 'Participant',
+                image: posterUrl
             });
             await newUser.save();
             res.status(201).json('User created successfully');
