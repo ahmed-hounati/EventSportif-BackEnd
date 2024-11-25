@@ -1,10 +1,8 @@
-const EventModel = require("../models/EventModel");
-const minio = require('../minio');
 const EventDao = require("../Dao/EventDao");
 
 
 
-class EventController {
+class InscriptionController {
 
     async addInscription(req, res) {
         const { eventId } = req.params;
@@ -68,4 +66,4 @@ class EventController {
 
 }
 
-module.exports = new EventController();
+module.exports = new InscriptionController();
