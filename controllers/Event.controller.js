@@ -1,5 +1,6 @@
 const EventModel = require("../models/EventModel");
 const minio = require('../minio');
+const EventDao = require("../Dao/EventDao");
 
 
 
@@ -18,7 +19,7 @@ class EventController {
             const poster = req.files.poster[0]
             const posterUrl = await this.uploadMoviePoster(poster, 'posters');
 
-            const event = new EventModel({
+            const event = EventDao.create({
                 name: name,
                 description: description,
                 image: posterUrl,
@@ -34,6 +35,62 @@ class EventController {
             res.status(400).json({ message: error.message });
         }
     }
+
+
+    async updateEvent(req, res) {
+        const { id } = req.params;
+        const { name, description, startDate, status } = req.body;
+        const token = req.headers['authorization']?.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
+
+        if (!req.files || !req.files.poster) {
+            return res.status(400).json({ message: "image files are required" });
+        }
+        const poster = req.files.poster[0]
+
+        try {
+            const posterUrl = await this.uploadMoviePoster(poster, 'posters');
+
+            const updatedEvent = await EventDao.updateById(id, {
+                name: name,
+                description: description,
+                image: posterUrl,
+                status: status,
+                startDate: startDate
+            });
+
+            res.status(200).json({
+                message: "Event Updated successfully", updatedEvent: updatedEvent
+            });
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    }
+
+
+    async deleteEvent(req, res) {
+        const { id } = req.params;
+        const token = req.headers['authorization']?.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
+        try {
+            const eve = EventDao.findById(id);
+            if (!eve) {
+                res.status(400).json({ message: "event not found" });
+            } else {
+                await EventDao.deleteById(id);
+                res.status(200).json({
+                    message: "Event deleted successfully"
+                });
+            }
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    }
+
 
     async uploadMoviePoster(file, folder) {
         const bucketName = 'sportsevent';
