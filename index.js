@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const Organizer = require('./models/UserModel')
 const authRoutes = require('./routes/authRoutes');
+const eventRoutes = require('./routes/eventRoutes');
 const organizerRoutes = require('./routes/organizerRoutes');
 require('dotenv').config();
 const app = express();
@@ -21,6 +22,7 @@ mongoose.connect(process.env.MONGO_URI, {})
 
 app.use('/api/auth', authRoutes);
 app.use('/api/organizer', organizerRoutes);
+app.use('/api/event', eventRoutes);
 
 
 
