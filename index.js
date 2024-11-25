@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const Organizer = require('./models/UserModel')
+const authRoutes = require('./routes/authRoutes');
 require('dotenv').config();
 const app = express();
 app.use(express.json());
@@ -13,6 +14,11 @@ mongoose.connect(process.env.MONGO_URI, {
     initializeOrganizer();
 })
     .catch((err) => console.error('Error connecting to MongoDB:', err));
+
+
+
+
+app.use('/api', authRoutes);
 
 
 
