@@ -5,7 +5,8 @@ const eventSchema = new mongoose.Schema({
     description: { type: String },
     startDate: { type: Date, required: true },
     image: { type: String },
-    status: { type: String }
+    status: { type: String },
+    inscriptions: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 }, {
     timestamps: true,
 });

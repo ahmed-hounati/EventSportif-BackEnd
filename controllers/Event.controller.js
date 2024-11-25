@@ -19,14 +19,13 @@ class EventController {
             const poster = req.files.poster[0]
             const posterUrl = await this.uploadMoviePoster(poster, 'posters');
 
-            const event = EventDao.create({
+            const event = await EventDao.create({
                 name: name,
                 description: description,
                 image: posterUrl,
                 status: status,
                 startDate: startDate
             });
-            await event.save();
 
             res.status(200).json({
                 message: "Event created successfully", event: event
