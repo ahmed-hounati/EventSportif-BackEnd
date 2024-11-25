@@ -1,0 +1,14 @@
+{
+  "name": "eventsportif-backend",
+  "version": "1.0.0",
+  "description": "Système de gestion des inscriptions à des événements sportifs ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.21.1"
+  }
+}
