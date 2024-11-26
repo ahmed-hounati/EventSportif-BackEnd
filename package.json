@@ -6,7 +6,9 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon --watch . index.js",
-    "test": "jest"
+    "test": "jest",
+    "docker-build:dev": "docker build -t event-sport:0.0.1 -f DockerFile.dev .",
+    "docker-run:dev": "docker run -it -p 3000:3000 --name event-sport -v event-sport-volume:/app -v my-node-modules:/app/node-modules event-sport:0.0.1"
   },
   "author": "",
   "license": "ISC",

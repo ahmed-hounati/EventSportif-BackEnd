@@ -32,7 +32,7 @@ async function initializeOrganizer() {
     try {
         const organizer = await Organizer.findOne({ email: process.env.EMAIL });
         if (!organizer) {
-            const hashedPassword = bcrypt.hash(process.env.PASSWORD, 8);
+            const hashedPassword = await bcrypt.hash(process.env.PASSWORD, 8);
 
             const newOrganizer = new Organizer({
                 name: process.env.NAME,
