@@ -1,9 +1,35 @@
 const minio = require('../minio');
 const EventDao = require("../Dao/EventDao");
 
-
-
 class EventController {
+
+    async getAllEvents(req, res) {
+        const token = req.headers['authorization']?.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
+        try {
+            const events = await EventDao.findAll();
+            res.status(200).json({ events: events });
+        } catch (error) {
+            return res.status(400).json({ message: "Cannot get the events" });
+        }
+    }
+
+
+    async getOneEvent(req, res) {
+        const { id } = req.params;
+        const token = req.headers['authorization']?.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
+        try {
+            const event = await EventDao.findById(id);
+            res.status(200).json({ event: event });
+        } catch (error) {
+            return res.status(400).json({ message: "Cannot get the event" });
+        }
+    }
 
     async addEvent(req, res) {
         const { name, description, startDate, status } = req.body;

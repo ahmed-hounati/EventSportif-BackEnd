@@ -6,6 +6,7 @@ const InscriptionController = require('../controllers/Inscription.controller');
 
 const router = express.Router();
 
+router.get('/all/:eventId', verifyToken, checkRole('Organizer'), (req, res) => InscriptionController.getAllInscription(req, res));
 router.post('/create/:eventId', verifyToken, checkRole('Organizer'), (req, res) => InscriptionController.addInscription(req, res));
 router.post('/delete/:eventId', verifyToken, checkRole('Organizer'), (req, res) => InscriptionController.deleteInscription(req, res));
 

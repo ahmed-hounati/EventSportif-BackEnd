@@ -1,8 +1,30 @@
 const EventDao = require("../Dao/EventDao");
+const UserDao = require("../Dao/UserDao");
 
 
 
 class InscriptionController {
+
+
+    async getAllInscription(req, res) {
+        const { eventId } = req.params;
+        const token = req.headers['authorization']?.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
+        try {
+            let users = [];
+            const event = await EventDao.findById(eventId);
+            const ids = event.inscriptions;
+            for (const id of ids) {
+                const user = await UserDao.findById(id);
+                users.push(user);
+            }
+            res.status(200).json({ Inscriptions: users });
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    }
 
     async addInscription(req, res) {
         const { eventId } = req.params;

@@ -1,7 +1,6 @@
 const AuthController = require('../controllers/Auth.controller');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const tokenBlacklist = require('../token/tokenBlacklist');
 const UserDao = require('../Dao/UserDao');
 
 jest.mock('../Dao/UserDao');
