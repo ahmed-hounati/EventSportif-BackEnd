@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const bcrypt = require('bcryptjs');
 const Organizer = require('./models/UserModel')
 const authRoutes = require('./routes/authRoutes');
@@ -9,6 +10,7 @@ const inscriptionRoutes = require('./routes/inscriptionRoutes');
 require('dotenv').config();
 const app = express();
 app.use(express.json());
+app.use(cors())
 
 
 mongoose.connect(process.env.MONGO_URI, {})

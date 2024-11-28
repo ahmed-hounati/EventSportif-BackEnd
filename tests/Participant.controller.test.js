@@ -1,4 +1,4 @@
-const OrganizerController = require('../controllers/Organizer.controller');
+const ParticipantController = require('../controllers/Participant.controller');
 const UserDao = require('../Dao/UserDao');
 const UserModel = require('../models/UserModel');
 const bcrypt = require('bcryptjs');
@@ -8,7 +8,7 @@ jest.mock('../Dao/UserDao');
 jest.mock('bcryptjs');
 jest.mock('../controllers/Event.controller');
 
-describe('OrganizerController', () => {
+describe('ParticipantController', () => {
     let req, res;
 
     beforeEach(() => {
@@ -29,7 +29,7 @@ describe('OrganizerController', () => {
         it('should return 401 if no token is provided', async () => {
             req.headers.authorization = undefined;
 
-            await OrganizerController.addParticipant(req, res);
+            await ParticipantController.addParticipant(req, res);
 
             expect(res.status).toHaveBeenCalledWith(401);
             expect(res.json).toHaveBeenCalledWith({ message: 'No token provided' });
@@ -39,7 +39,7 @@ describe('OrganizerController', () => {
             req.headers.authorization = 'Bearer someValidToken';
             req.files = null;
 
-            await OrganizerController.addParticipant(req, res);
+            await ParticipantController.addParticipant(req, res);
 
             expect(res.status).toHaveBeenCalledWith(400);
             expect(res.json).toHaveBeenCalledWith({ message: 'image files are required' });
@@ -50,7 +50,7 @@ describe('OrganizerController', () => {
             req.headers.authorization = 'Bearer someValidToken';
             UserDao.findByEmail.mockResolvedValue({ email: 'test@example.com' });
 
-            await OrganizerController.addParticipant(req, res);
+            await ParticipantController.addParticipant(req, res);
 
             expect(UserDao.findByEmail).toHaveBeenCalledWith('test@example.com');
             expect(res.status).toHaveBeenCalledWith(404);
@@ -66,7 +66,7 @@ describe('OrganizerController', () => {
             uploadMoviePoster.mockResolvedValue('http://example.com/poster.jpg');
             UserModel.prototype.save = jest.fn().mockResolvedValue();
 
-            await OrganizerController.addParticipant(req, res);
+            await ParticipantController.addParticipant(req, res);
 
             expect(UserDao.findByEmail).toHaveBeenCalledWith('test@example.com');
             expect(bcrypt.hash).toHaveBeenCalledWith('password', 8);
@@ -82,7 +82,7 @@ describe('OrganizerController', () => {
                 throw Error('Database error');
             });
 
-            await OrganizerController.addParticipant(req, res);
+            await ParticipantController.addParticipant(req, res);
 
             expect(res.status).toHaveBeenCalledWith(400);
             expect(res.json).toHaveBeenCalledWith({ message: 'Database error' });
@@ -93,7 +93,7 @@ describe('OrganizerController', () => {
         it('should return 401 if no token is provided', async () => {
             req.headers.authorization = undefined;
 
-            await OrganizerController.deleteParticipant(req, res);
+            await ParticipantController.deleteParticipant(req, res);
 
             expect(res.status).toHaveBeenCalledWith(401);
             expect(res.json).toHaveBeenCalledWith({ message: 'No token provided' });
@@ -104,7 +104,7 @@ describe('OrganizerController', () => {
             req.headers.authorization = 'Bearer someValidToken';
             UserDao.deleteById.mockResolvedValue(null);
 
-            await OrganizerController.deleteParticipant(req, res);
+            await ParticipantController.deleteParticipant(req, res);
 
             expect(UserDao.deleteById).toHaveBeenCalledWith('1');
             expect(res.status).toHaveBeenCalledWith(400);
@@ -116,7 +116,7 @@ describe('OrganizerController', () => {
             req.headers.authorization = 'Bearer someValidToken';
             UserDao.deleteById.mockResolvedValue(true);
 
-            await OrganizerController.deleteParticipant(req, res);
+            await ParticipantController.deleteParticipant(req, res);
 
             expect(UserDao.deleteById).toHaveBeenCalledWith('1');
             expect(res.status).toHaveBeenCalledWith(200);
@@ -130,7 +130,7 @@ describe('OrganizerController', () => {
                 throw Error('Deletion error');
             });
 
-            await OrganizerController.deleteParticipant(req, res);
+            await ParticipantController.deleteParticipant(req, res);
 
             expect(res.status).toHaveBeenCalledWith(400);
             expect(res.json).toHaveBeenCalledWith({ message: 'Deletion error' });

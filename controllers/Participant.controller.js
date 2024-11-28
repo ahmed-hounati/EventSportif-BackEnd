@@ -56,6 +56,21 @@ class OrganizerController {
         }
     }
 
+
+    async getAllParticipants() {
+        const token = req.headers['authorization']?.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
+        try {
+            const role = "participant";
+            const participants = await UserDao.findAll(role);
+            res.status(200).json({ participants: participants });
+        } catch (error) {
+            return res.status(400).json({ message: "Cannot get the participants" });
+        }
+    }
+
 }
 
 module.exports = new OrganizerController();

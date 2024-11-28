@@ -1,13 +1,14 @@
 const User = require('../models/UserModel');
 
 class UserDAO {
-    async findAll() {
+    async findAll(role) {
         try {
-            return await User.find();
+            return await User.find({ role: role });
         } catch (error) {
             throw new Error('Error fetching Users');
         }
     }
+
 
     async findById(id) {
         try {
