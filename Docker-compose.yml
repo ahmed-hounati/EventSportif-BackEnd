@@ -9,9 +9,34 @@ services:
       - docker.env
     depends_on:
       - mongoDB
+      - minio
+    networks:
+      - mynetwork
 
   mongoDB:
     image: mongo:5.0
     container_name: mongo
     ports:
       - "27017:27017"
+    networks:
+      - mynetwork
+
+  minio:
+    image: minio/minio
+    environment:
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+    ports:
+      - "9000:9000"
+    command: server /data
+    volumes:
+      - minio-data:/data
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
+
+volumes:
+  minio-data:
