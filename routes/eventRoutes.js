@@ -7,6 +7,8 @@ const upload = require('../middlewares/upload');
 
 const router = express.Router();
 
+router.get('/', verifyToken, checkRole('Organizer'), (req, res) => EventController.getAllEvents(req, res))
+router.get('/one/:id', verifyToken, checkRole('Organizer'), (req, res) => EventController.getOneEvent(req, res))
 router.post('/create', verifyToken, checkRole('Organizer'), upload, (req, res) => EventController.addEvent(req, res));
 router.put('/update/:id', verifyToken, checkRole('Organizer'), upload, (req, res) => EventController.updateEvent(req, res));
 router.delete('/delete/:id', verifyToken, checkRole('Organizer'), (req, res) => EventController.deleteEvent(req, res));

@@ -32,7 +32,7 @@ class EventController {
     }
 
     async addEvent(req, res) {
-        const { name, description, startDate, status } = req.body;
+        const { name, description, startDate, local } = req.body;
         const token = req.headers['authorization']?.split(' ')[1];
         if (!token) {
             return res.status(401).json({ message: 'No token provided' });
@@ -48,7 +48,7 @@ class EventController {
                 name: name,
                 description: description,
                 image: posterUrl,
-                status: status,
+                local: local,
                 startDate: startDate
             });
 

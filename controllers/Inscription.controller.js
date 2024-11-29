@@ -1,5 +1,6 @@
 const EventDao = require("../Dao/EventDao");
 const UserDao = require("../Dao/UserDao");
+const { login } = require("./Auth.controller");
 
 
 
@@ -62,6 +63,7 @@ class InscriptionController {
     async deleteInscription(req, res) {
         const { eventId } = req.params;
         const { user } = req.body;
+
         const token = req.headers['authorization']?.split(' ')[1];
         if (!token) {
             return res.status(401).json({ message: 'No token provided' });
@@ -72,6 +74,7 @@ class InscriptionController {
                 res.status(400).json({ message: "event not found" });
             }
             const userExists = event.inscriptions.includes(user);
+
             if (!userExists) {
                 return res.status(404).json({ message: "User not found in inscriptions" });
             }

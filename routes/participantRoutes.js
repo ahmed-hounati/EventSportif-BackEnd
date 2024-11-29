@@ -8,6 +8,7 @@ const ParticipantController = require('../controllers/Participant.controller');
 const router = express.Router();
 
 router.post('/create', verifyToken, checkRole('Organizer'), upload, (req, res) => ParticipantController.addParticipant(req, res));
+router.put('/update/:id', verifyToken, checkRole('Organizer'), upload, (req, res) => ParticipantController.updateParticipant(req, res));
 router.delete('/delete/:id', verifyToken, checkRole('Organizer'), (req, res) => ParticipantController.deleteParticipant(req, res));
 router.get('/all', verifyToken, checkRole('Organizer'), (req, res) => ParticipantController.getAllParticipants(req, res));
 

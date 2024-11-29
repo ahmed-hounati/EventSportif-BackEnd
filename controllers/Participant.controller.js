@@ -8,7 +8,7 @@ const { uploadMoviePoster } = require('./Event.controller');
 class OrganizerController {
 
     async addParticipant(req, res) {
-        const { email, password, name } = req.body;
+        const { email, name } = req.body;
         const token = req.headers['authorization']?.split(' ')[1];
         if (!token) {
             return res.status(401).json({ message: 'No token provided' });
@@ -23,16 +23,40 @@ class OrganizerController {
             if (User) {
                 return res.status(404).json({ message: 'email already used' });
             }
-            const hashedPassword = await bcrypt.hash(password, 8);
             const newUser = new UserModel({
                 name: name,
                 email: email,
-                password: hashedPassword,
                 role: 'Participant',
                 image: posterUrl
             });
             await newUser.save();
             res.status(201).json('User created successfully');
+        } catch (error) {
+            res.status(400).json({ message: error.message });
+        }
+    }
+
+    async updateParticipant(req, res) {
+        const { id } = req.params;
+        const { email, name } = req.body;
+        const token = req.headers['authorization']?.split(' ')[1];
+        if (!token) {
+            return res.status(401).json({ message: 'No token provided' });
+        }
+        if (!req.files || !req.files.poster) {
+            return res.status(400).json({ message: "image files are required" });
+        }
+        const poster = req.files.poster[0]
+        const posterUrl = await uploadMoviePoster(poster, 'posters');
+        try {
+            const updatedParticipant = await UserDao.updateById(id, {
+                name: name,
+                email: email,
+                role: 'Participant',
+                image: posterUrl
+            })
+            await updatedParticipant.save();
+            res.status(201).json('User Updated successfully');
         } catch (error) {
             res.status(400).json({ message: error.message });
         }
@@ -57,13 +81,13 @@ class OrganizerController {
     }
 
 
-    async getAllParticipants() {
+    async getAllParticipants(req, res) {
         const token = req.headers['authorization']?.split(' ')[1];
         if (!token) {
             return res.status(401).json({ message: 'No token provided' });
         }
         try {
-            const role = "participant";
+            const role = "Participant";
             const participants = await UserDao.findAll(role);
             res.status(200).json({ participants: participants });
         } catch (error) {
